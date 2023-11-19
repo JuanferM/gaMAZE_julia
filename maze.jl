@@ -62,7 +62,7 @@ function afficheIndividu(indIn, carteIn)
     j=1; jplot = 2
     carte[iplot,jplot] = repr(0)[1]
     for longueur=2:fitness
-            if     (ind[i,j] == 1) # Nord
+            if    (ind[i,j] == 1) # Nord
                 i-=1
             elseif (ind[i,j] == 2) # Est
                 j+=1
@@ -91,7 +91,7 @@ function contrainteSoftLabyrinthe(carte)
     for i=1:10
         j=rand(1:10)
         pattern=rand([1,2,4,8])
-        if     (pattern == 1)
+        if    (pattern == 1)
             carte[2*i,2*j-1] = '|'
         elseif (pattern == 2)
             carte[2*i+1,2*j] = '-'
@@ -158,7 +158,7 @@ function evaluerIndividu(n,carte,ind)
     i=1; j=1; fitness = 0; avance = true; realisable = false
     visite[i,j]=true
     while (avance) && (!realisable)
-            if     (ind[i,j] == 1) && (carte[2*i-1,2*j] ==' ') && (visite[i-1,j] == false)  # Nord
+            if    (ind[i,j] == 1) && (carte[2*i-1,2*j] ==' ') && (visite[i-1,j] == false)  # Nord
                 i-=1 ; fitness +=1; visite[i,j]=true
             elseif (ind[i,j] == 2) && (carte[2*i,2*j+1] ==' ') && (visite[i,j+1] == false)  # Est
                 j+=1 ; fitness +=1; visite[i,j]=true
@@ -276,9 +276,9 @@ function survivantEnfant( carte, e , em )
         return (f1 > f2) ? e : em
     elseif r1 && !r2
         return e
-    else
-        return em
     end
+
+    return em
 end
 
 # -------------------------------------------------------------------------------------------------
@@ -320,8 +320,8 @@ function IdentifieMeilleur( pop , popSize )
     end
     if existe
         @printf(" Longueur de meilleure solution trouvee : %3d\n",minFitness)
-    else
-        println(" Pas de solution realisable trouvee !")
+    # else
+    #    println(" Pas de solution realisable trouvee !")
     end
     return iElite1
 end
@@ -329,12 +329,12 @@ end
 # -------------------------------------------------------------------------------------------------
 # Rock and Roll
 function main()
+    # partie "creation du labyrinthe"
     numGen = 40
     if length(ARGS) == 1
         numGen = parse(Int64, ARGS[1])
     end
-    
-    # partie "creation du labyrinthe"
+
     n = 10
     carte = Matrix{Char}( undef, 21, 21 )
     carte = construireLabyrinthe()
@@ -345,6 +345,7 @@ function main()
     # partie "algorithme genetique"
     popSize = 100 # multiple de 2
     pop = creerPopulation( n , popSize , carte )
+    alltimebest = []
 
     for generation=1:numGen
         newGen = []
@@ -362,10 +363,25 @@ function main()
             fitness, realisable = evaluerIndividu( n, carte, e2)
             push!( newGen, (e2, fitness, realisable) )
         end # reproduction
+
+        iBest = IdentifieMeilleur( pop , popSize )
+        if iBest !=0
+            push!( alltimebest, pop[iBest] )
+        end
+
         pop = changeGeneration( newGen, popSize )
-     end # generation
-     iBest = IdentifieMeilleur( pop , popSize )
-     if iBest !=0
-         afficheIndividu(pop[iBest],carte)
-     end
+
+        if numGen > 40 && generation%(numGen//4) == 0
+            println("New generation!")
+            pop = creerPopulation( n, popSize, carte )
+        end
+    end # generation
+    iBest = IdentifieMeilleur( alltimebest , length(alltimebest) )
+    if iBest !=0
+        afficheIndividu( alltimebest[iBest], carte )
+    else
+      println("Pas de solution réalisable trouvée!")
+    end
 end
+
+main()
