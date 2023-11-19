@@ -1,8 +1,14 @@
 # GAmaze_julia
 Genetic Algorithms heuristic to generate and solve Maze in Julia
 
+## How to run
+```
+julia maze.jl [number_of_generations]
+```
+By default, the number of generations is 40.
+
 ## TODO
-Améliorer masquage :
+Expériences masquage :
  * introduire un quantificateur pour déterminer si l'on a
    un chemin plus ou moins rectiligne se rapprochant de la sortie
    (soit **n** la dimension du quadrillage, **v** le nombre de voisins total c-à-d
