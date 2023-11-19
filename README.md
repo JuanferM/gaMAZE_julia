@@ -1,5 +1,5 @@
 # GAmaze_julia
-Genetic Algorithms heuristic to generate and solve Maze in Julia
+Genetic Algorithms heuristic to generate and solve a maze in Julia
 
 ## How to run
 ```
