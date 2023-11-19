@@ -224,6 +224,8 @@ function crossover(p1,p2)
                 end
             end
         end
+
+        return e1,e2
     end
 
     return p1,p2
