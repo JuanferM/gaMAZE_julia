@@ -329,6 +329,11 @@ end
 # -------------------------------------------------------------------------------------------------
 # Rock and Roll
 function main()
+    numGen = 40
+    if length(ARGS) == 1
+        numGen = parse(Int64, ARGS[1])
+    end
+    
     # partie "creation du labyrinthe"
     n = 10
     carte = Matrix{Char}( undef, 21, 21 )
@@ -341,7 +346,7 @@ function main()
     popSize = 100 # multiple de 2
     pop = creerPopulation( n , popSize , carte )
 
-    for generation=1:40
+    for generation=1:numGen
         newGen = []
         @printf("[%5d]  ",generation)
 
